@@ -1,0 +1,8 @@
+#ifndef __FONCTIONS_H__
+#define __FONCTIONS_H__
+
+void	my_putchar(char c);
+void	my_putstr(char *str);
+int     my_strcmp(char *s1, char *s2);
+
+#endif

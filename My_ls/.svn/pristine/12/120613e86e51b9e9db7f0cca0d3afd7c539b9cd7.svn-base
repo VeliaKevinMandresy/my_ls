@@ -1,0 +1,75 @@
+#include <sys/types.h>
+#include <stdio.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h> 
+
+void my_putchar (char c)
+{
+  write(1, &c, 1);
+}
+
+void my_putstr(char *s1)
+{
+  int i;
+  
+  i = 0;
+  while (s1[i] != '\0')
+    {
+      my_putchar(s1[i]);
+      i++;
+    }
+}
+
+int     my_strcmp(char *s1, char *s2)
+{
+  int   i;
+  int   r;
+  
+  r = 0;
+  i = 0;
+  while (s1[i] && s2[i] && s1[i] == s2[i])
+    i++;
+  r = (s1[i] - s2[i]);
+  if (r > 0)
+    return (1);
+  if (r == 0)
+    return (0);
+  else
+    return (-1);
+}
+
+/*
+** Fonctions ls -A -> affiche les fichiers cacher a l'exeption du "." et ".."
+*/
+int my_ls(void)
+{
+  char            path[PATH_MAX + 1];
+  DIR             *dir;
+  struct dirent   *entry;
+
+  getcwd(path, PATH_MAX);
+  if ((dir = opendir(path)) == NULL)
+     return (EXIT_FAILURE);
+  while ((entry = readdir(dir)) != NULL)
+  {
+  		if(my_strcmp(".", entry->d_name) 
+        && my_strcmp("..", entry->d_name))
+      {
+    	 my_putstr(entry->d_name);
+       my_putstr("   ");
+      }
+     // faire un stat ou lstat ici. Attention aux chemins relatifs
+  }
+  my_putstr("\n");
+  if (closedir(dir) == -1)
+     return (EXIT_FAILURE);
+  return (EXIT_SUCCESS);
+}
+
+int main(void)
+{
+  my_ls();
+  return 0;
+}
